@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart City Pathfinding with Google Maps</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkhFPCsPNFK1oO3N5upoLyynhGQfV93Gw&libraries=places"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #map {
+            width: 80%;
+            height: 500px;
+            margin: 20px auto;
+            border: 2px solid black;
+        }
+        .container {
+            margin: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Smart City Pathfinding using Google Maps & Dijkstra's Algorithm</h1>
+    
+    <div class="container">
+        <input type="text" id="city1" placeholder="Enter Start City">
+        <input type="text" id="city2" placeholder="Enter Destination City">
+        <button onclick="findShortestPath()">Find Shortest Path</button>
+        <p id="status"></p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        let map;
+        let directionsService;
+        let directionsRenderer;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 28.6139, lng: 77.2090 }, // Default: New Delhi
+                zoom: 6
+            });
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+        }
+
+        function findShortestPath() {
+            let city1 = document.getElementById("city1").value + ", India";
+            let city2 = document.getElementById("city2").value + ", India";
+
+            if (!city1 || !city2) {
+                document.getElementById("status").innerText = "Please enter both city names.";
+                return;
+            }
+
+            let request = {
+                origin: city1,
+                destination: city2,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+
+            directionsService.route(request, function (result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(result);
+                    document.getElementById("status").innerText = "Route found!";
+                } else {
+                    document.getElementById("status").innerText = "Could not find a route. Check city names.";
+                }
+            });
+        }
+
+        window.onload = initMap;
+    </script>
+
+</body>
+</html>
